@@ -11,6 +11,21 @@ datasource db {
 }
 
 model User {
-  id   Int    @id @default(autoincrement())
-  name String
+  id             String  @id @default(uuid())
+  name           String
+  isAdmin        Boolean
+  preferences    Json?
+  writtenPosts   Post[]  @relation("WrittenPosts")
+  favoiritePosts Post[]  @relation("FavouritePosts")
+}
+
+model Post {
+  id             String   @id @default(uuid())
+  rating         Float
+  createdAt      DateTime
+  updatedAt      DateTime
+  author         User     @relation("WrittenPosts", fields: [authorId], references: [id]) //authorId - what field in this table represents the field in other table
+  authorId       String
+  favouritedBy   User?    @relation("FavouritePosts", fields: [favouritedById], references: [id])
+  favouritedById String?
 }
