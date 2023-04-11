@@ -12,11 +12,16 @@ datasource db {
 
 model User {
   id             String          @id @default(uuid())
+  age            Int
   name           String
+  email          String          @unique
   isAdmin        Boolean
   writtenPosts   Post[]          @relation("WrittenPosts")
   favoiritePosts Post[]          @relation("FavouritePosts")
   UserPreference UserPreference?
+
+  @@unique([age, name]) //block level attributes (there can only be one person with the same age AND name)
+  @@index([email]) //helps with sorting/performance
 }
 
 model UserPreference {
@@ -28,7 +33,8 @@ model UserPreference {
 
 model Post {
   id             String     @id @default(uuid())
-  rating         Float
+  title          String
+  averageRating  Float
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
   author         User       @relation("WrittenPosts", fields: [authorId], references: [id]) //authorId - what field in this table represents the field in other table
@@ -36,9 +42,12 @@ model Post {
   favouritedBy   User?      @relation("FavouritePosts", fields: [favouritedById], references: [id])
   favouritedById String?
   categories     Category[]
+
+  // @@id([title, authorId]) //composite id (it contains multiple things)
 }
 
 model Category {
   id    String @id @default(uuid())
+  name  String @unique
   posts Post[]
 }
