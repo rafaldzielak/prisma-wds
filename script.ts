@@ -1,8 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient(/*{ log: ["query"] }*/);
 
-const main = async () => {
-  await prisma.user.deleteMany();
+const createUsers = async () => {
   const user = await prisma.user.create({
     data: {
       name: "Rafa",
@@ -26,8 +25,25 @@ const main = async () => {
       { name: "Rafa3", email: "rafa3@dyrektorek.com", age: 28 },
     ],
   });
+  // console.log(user);
+  // console.log(count);
+};
+
+const main = async () => {
+  await prisma.user.deleteMany();
+  await createUsers();
+  const userUnique = await prisma.user.findUnique({ where: { age_name: { age: 28, name: "Rafa" } } });
+  console.log(userUnique);
+  const user = await prisma.user.findFirst({ where: { name: "Rafa", AND: { age: 28 } } });
   console.log(user);
-  console.log(count);
+  const users = await prisma.user.findMany({
+    where: { age: 28 },
+    distinct: ["name"],
+    take: 2,
+    skip: 1,
+    orderBy: { name: "desc" },
+  });
+  console.log(users);
 };
 
 main()
