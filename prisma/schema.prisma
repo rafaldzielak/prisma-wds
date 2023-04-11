@@ -29,8 +29,8 @@ model UserPreference {
 model Post {
   id             String     @id @default(uuid())
   rating         Float
-  createdAt      DateTime
-  updatedAt      DateTime
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
   author         User       @relation("WrittenPosts", fields: [authorId], references: [id]) //authorId - what field in this table represents the field in other table
   authorId       String
   favouritedBy   User?      @relation("FavouritePosts", fields: [favouritedById], references: [id])
