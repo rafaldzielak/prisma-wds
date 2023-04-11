@@ -11,11 +11,19 @@ datasource db {
 }
 
 model User {
-  id             String  @id @default(uuid())
+  id             String          @id @default(uuid())
   name           String
   isAdmin        Boolean
-  writtenPosts   Post[]  @relation("WrittenPosts")
-  favoiritePosts Post[]  @relation("FavouritePosts")
+  writtenPosts   Post[]          @relation("WrittenPosts")
+  favoiritePosts Post[]          @relation("FavouritePosts")
+  UserPreference UserPreference?
+}
+
+model UserPreference {
+  id           String  @id @default(uuid())
+  emailUpdates Boolean
+  user         User    @relation(fields: [userId], references: [id])
+  userId       String  @unique
 }
 
 model Post {
