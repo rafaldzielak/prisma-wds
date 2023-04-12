@@ -78,6 +78,15 @@ const update = async () => {
     where: { age: 28 },
     data: { age: 27 },
   });
+
+  const user2 = await prisma.user.update({
+    where: { email: "rafa5@dyrektorek.com" },
+    data: { userPreference: { connect: { id: "someID" } } },
+  });
+  const user3 = await prisma.user.update({
+    where: { email: "rafa5@dyrektorek.com" },
+    data: { userPreference: { disconnect: true } },
+  });
   console.log(user);
   console.log(usersCount);
 };
