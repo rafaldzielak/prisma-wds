@@ -65,7 +65,21 @@ const relationshipFiltering = async () => {
       author: { is: { age: 28 } },
     },
   });
-  console.log(users);
+  // console.log(users);
+};
+
+const update = async () => {
+  const user = await prisma.user.update({
+    // has to be done on unique field
+    where: { email: "rafa4@dyrektorek.com" },
+    data: { email: "rafa5@dyrektorek.com" },
+  });
+  const usersCount = await prisma.user.updateMany({
+    where: { age: 28 },
+    data: { age: 27 },
+  });
+  console.log(user);
+  console.log(usersCount);
 };
 
 const main = async () => {
@@ -73,6 +87,7 @@ const main = async () => {
   await createUsers();
   await advancedFiltering();
   await relationshipFiltering();
+  await update();
 };
 
 main()
