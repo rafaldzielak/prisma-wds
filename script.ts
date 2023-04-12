@@ -30,13 +30,9 @@ const createUsers = async () => {
   // console.log(count);
 };
 
-const main = async () => {
-  await prisma.user.deleteMany();
-  await createUsers();
+const advancedFiltering = async () => {
   const userUnique = await prisma.user.findUnique({ where: { age_name: { age: 28, name: "Rafa" } } });
-  console.log(userUnique);
   const user = await prisma.user.findFirst({ where: { name: "Rafa", AND: { age: 28 } } });
-  console.log(user);
   const users = await prisma.user.findMany({
     where: { age: 28 },
     distinct: ["name"],
@@ -44,14 +40,39 @@ const main = async () => {
     skip: 1,
     orderBy: { name: "desc" },
   });
-  console.log(users);
   const users2 = await prisma.user.findMany({
     where: {
       OR: [{ name: { in: ["Rafa, Rafa2"] } }, { age: { not: 28 } }],
       AND: [{ email: { endsWith: "@dyrektorek.com" } }, { email: { contains: "rafa" } }],
     },
   });
-  console.log(users2);
+  // console.log(userUnique);
+  // console.log(user);
+  // console.log(users);
+  // console.log(users2);
+};
+
+const relationshipFiltering = async () => {
+  const users = await prisma.user.findMany({
+    where: {
+      writtenPosts: {
+        some: { title: "Test" },
+      },
+    },
+  });
+  const posts = await prisma.post.findMany({
+    where: {
+      author: { is: { age: 28 } },
+    },
+  });
+  console.log(users);
+};
+
+const main = async () => {
+  await prisma.user.deleteMany();
+  await createUsers();
+  await advancedFiltering();
+  await relationshipFiltering();
 };
 
 main()
