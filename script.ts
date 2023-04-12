@@ -23,6 +23,7 @@ const createUsers = async () => {
     data: [
       { name: "Rafa2", email: "rafa2@dyrektorek.com", age: 28 },
       { name: "Rafa3", email: "rafa3@dyrektorek.com", age: 28 },
+      { name: "Rafa", email: "rafa4@dyrektorek.com", age: 29 },
     ],
   });
   // console.log(user);
@@ -44,6 +45,13 @@ const main = async () => {
     orderBy: { name: "desc" },
   });
   console.log(users);
+  const users2 = await prisma.user.findMany({
+    where: {
+      OR: [{ name: { in: ["Rafa, Rafa2"] } }, { age: { not: 28 } }],
+      AND: [{ email: { endsWith: "@dyrektorek.com" } }, { email: { contains: "rafa" } }],
+    },
+  });
+  console.log(users2);
 };
 
 main()
