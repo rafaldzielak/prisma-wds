@@ -79,16 +79,23 @@ const update = async () => {
     data: { age: 27 },
   });
 
-  const user2 = await prisma.user.update({
-    where: { email: "rafa5@dyrektorek.com" },
-    data: { userPreference: { connect: { id: "someID" } } },
-  });
-  const user3 = await prisma.user.update({
-    where: { email: "rafa5@dyrektorek.com" },
-    data: { userPreference: { disconnect: true } },
-  });
+  // const user2 = await prisma.user.update({
+  //   where: { email: "rafa5@dyrektorek.com" },
+  //   data: { userPreference: { connect: { id: "someID" } } },
+  // });
+  // const user3 = await prisma.user.update({
+  //   where: { email: "rafa5@dyrektorek.com" },
+  //   data: { userPreference: { disconnect: true } },
+  // });
+  // console.log(user);
+  // console.log(usersCount);
+};
+
+const deleteUsers = async () => {
+  const user = await prisma.user.delete({ where: { email: "rafa@dyrektorek.com" } });
+  const users = await prisma.user.deleteMany({ where: { age: { gt: 20 } } });
   console.log(user);
-  console.log(usersCount);
+  console.log(users);
 };
 
 const main = async () => {
@@ -97,6 +104,7 @@ const main = async () => {
   await advancedFiltering();
   await relationshipFiltering();
   await update();
+  await deleteUsers();
 };
 
 main()
